@@ -5,9 +5,9 @@ class AlbumRepository
     albums = []
 
     # Send the SQL query and get the result set.
-    sql = 'SELECT id, title, release_year, artist_id FROM albums;'
+    sql = 'SELECT id, title, release_year, artist_id FROM albums ORDER BY id;'
     result_set = DatabaseConnection.exec_params(sql, [])
-    
+
     # The result set is an array of hashes.
     # Loop through it to create a model
     # object for each record hash.

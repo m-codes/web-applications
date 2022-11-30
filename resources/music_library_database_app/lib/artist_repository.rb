@@ -7,7 +7,7 @@ class ArtistRepository
     # Send the SQL query and get the result set.
     sql = 'SELECT id, name, genre FROM artists;'
     result_set = DatabaseConnection.exec_params(sql, [])
-    
+
     # The result set is an array of hashes.
     # Loop through it to create a model
     # object for each record hash.
