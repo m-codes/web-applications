@@ -25,6 +25,54 @@ describe Application do
     reset_table
   end
 
+
+
+
+  context 'GET /artist/new' do
+    it 'returns a form to add a new artist' do
+      response = get('/artist/new')
+      expect(response.status).to eq 200
+      expect(response.body).to include('<form method="POST" action="/artists">')
+      expect(response.body).to include('<input type="text" name="name">')
+      expect(response.body).to include('<input type="text" name="genre">')
+    end
+  end
+
+
+
+  context 'GET /album/new' do
+    it 'returns a form to add a new album' do
+      response = get('/album/new')
+      expect(response.status).to eq 200
+
+
+      expect(response.body).to include('<form method="POST" action="/albums">')
+      expect(response.body).to include('<input type="text" name="title">')
+      expect(response.body).to include('<input type="text" name="release_year">')
+      expect(response.body).to include('<input type="text" name="artist_id">')
+    end
+  end
+
+
+
+  context 'GET /artist/:id' do
+    it 'returns an artist by its id' do
+      response = get('/artist/1')
+      expect(response.status).to eq 200
+      expect(response.body).to include('Artist: Pixies')
+      expect(response.body).to include('Genre: Rock')
+    end
+  end
+
+  context 'GET /artist/:id' do
+    it 'returns an artist by its id' do
+      response = get('/artist/2')
+      expect(response.status).to eq 200
+      expect(response.body).to include('Artist: ABBA')
+      expect(response.body).to include('Genre: Pop')
+    end
+  end
+
   context 'GET /albums' do
     it 'should return the list of albums in div' do
       response = get('/albums')
@@ -34,10 +82,14 @@ describe Application do
       expect(response.body).to include('Released: 2020')
       expect(response.body).to include('Title: Fodder on My Wings')
       expect(response.body).to include('Released: 1982')
+
+      expect(response.body).to include('<a href="/albums/2">Title: Surfer Rosa</a>')
+      expect(response.body).to include('<a href="/albums/3">Title: Waterloo</a>')
+      expect(response.body).to include('<a href="/albums/4">Title: Super Trouper</a>')
+      expect(response.body).to include('<a href="/albums/5">Title: Bossanova</a>')
+
     end
   end
-
-
 
   context 'GET /albums/:id' do
     it 'returns an album by its id' do
@@ -62,7 +114,6 @@ describe Application do
     end
   end
 
-
   context 'GET /artists' do
     it 'should return the list of artists' do
       response = get('/artists')
@@ -81,22 +132,31 @@ describe Application do
   #   end
   # end
 
-  # context 'POST /albums' do
-  #   it 'should create a new album' do
-  #     response = post(
-  #       '/albums',
-  #       title: 'Voyage',
-  #       release_year: '2022',
-  #       artist_id: '2'
-  #     )
-  #
-  #     expect(response.status).to eq 200
-  #     expect(response.body).to eq ('')
-  #
-  #     response = get('/albums')
-  #     expect(response.body).to include('Voyage')
-  #   end
-  # end
+  context 'POST /albums' do
+    it 'checks if the parameter are valid' do
+      response = post(
+      '/albums',
+      invalid_album_title: ' ',
+      another_invalid_thing: 123
+      )
+      expect(response.status).to eq 400
+
+    end
+    it 'should create a new album' do
+      response = post(
+        '/albums',
+        title: 'Voyage',
+        release_year: '2022',
+        artist_id: '2'
+      )
+
+      expect(response.status).to eq 200
+      expect(response.body).to eq ('')
+
+      response = get('/albums')
+      expect(response.body).to include('Voyage')
+    end
+  end
 
 
 
